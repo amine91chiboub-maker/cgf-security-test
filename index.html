@@ -1,128 +1,2340 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CGF Security Assessment</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGF Security Knowledge Assessment - Enterprise Edition</title>
     <style>
-        body { font-family: Arial; margin: 20px; background: #f5f5f5; }
-        .container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .btn { background: #007cba; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; margin: 5px; font-size: 16px; }
-        .btn:hover { background: #005a8a; }
-        .question { margin: 20px 0; padding: 20px; background: #f9f9f9; border-radius: 8px; }
-        .option { margin: 10px 0; padding: 15px; background: white; border: 2px solid #ddd; border-radius: 6px; cursor: pointer; }
-        .option:hover { background: #e3f2fd; border-color: #007cba; }
-        .option.selected { background: #e3f2fd; border-color: #007cba; }
-        .hidden { display: none; }
-        .header { background: linear-gradient(135deg, #007cba, #0099e6); color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00688d, #0080b3);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .login-selection {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .login-option {
+            background: #f8f9fa;
+            border: 2px solid #00688d;
+            border-radius: 10px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .login-option:hover {
+            background: #e3f2fd;
+            transform: translateY(-2px);
+        }
+
+        .login-option h3 {
+            color: #00688d;
+            margin-bottom: 10px;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .admin-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .user-info {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00688d;
+        }
+
+        .restriction-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .start-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .question-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #00688d;
+        }
+
+        .question-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00688d;
+        }
+
+        .timer {
+            font-size: 16px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .category-badge {
+            background: #00688d;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .options {
+            list-style: none;
+        }
+
+        .option {
+            margin-bottom: 15px;
+        }
+
+        .option label {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option label:hover {
+            background: #e3f2fd;
+            border-color: #00688d;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .btn {
+            background: #00688d;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #005a7a;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #00688d;
+        }
+
+        .select-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            background: white;
+        }
+
+        .textarea-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .results {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .score-summary {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #00688d, #0080b3);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .category-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #00688d;
+        }
+
+        .category-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00688d;
+        }
+
+        .category-score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .best-category {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .worst-category {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00688d, #0080b3);
+            transition: width 0.3s ease;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .admin-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .admin-tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 2px solid transparent;
+        }
+
+        .admin-tab.active {
+            color: #00688d;
+            border-bottom-color: #00688d;
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .admin-content.active {
+            display: block;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .results-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .results-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .question-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .option-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .option-input input[type="text"] {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .option-input input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .admin-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .admin-item:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔒 CGF Security Assessment</h1>
-            <p>Professional Security Training Platform</p>
-        </div>
-        
-        <div id="login">
-            <h3>👤 Enter Your Details</h3>
-            <input type="text" id="name" placeholder="Your Full Name" style="width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 6px; font-size: 16px;">
-            <input type="text" id="alias" placeholder="Your AWS Alias" style="width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 6px; font-size: 16px;">
-            <button class="btn" onclick="startTest()">🚀 Start Security Assessment</button>
+            <h1>CGF Security Knowledge Assessment</h1>
+            <p>Enterprise Security Training Platform</p>
         </div>
 
-        <div id="test" class="hidden">
-            <div style="background: #e9ecef; height: 10px; border-radius: 5px; margin: 20px 0;">
-                <div id="progress" style="background: #007cba; height: 100%; border-radius: 5px; width: 0%; transition: width 0.3s;"></div>
-            </div>
-            <p style="text-align: center;">Question <span id="current">1</span> of <span id="total">5</span> | Time: <span id="timer">00:00</span></p>
-            <div id="questionArea"></div>
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn" onclick="nextQuestion()" id="nextBtn">Next Question ➡️</button>
-                <button class="btn" onclick="finishTest()" id="finishBtn" class="hidden" style="background: #28a745;">✅ Complete Assessment</button>
+        <!-- Login Selection -->
+        <div id="loginSelection" class="login-selection">
+            <h2>Select Login Type</h2>
+            <p style="margin-bottom: 20px;">Please choose how you want to access the system:</p>
+            
+            <div class="login-options">
+                <div class="login-option" id="userLoginBtn">
+                    <h3>👤 User Login</h3>
+                    <p>Take the security assessment</p>
+                </div>
+                <div class="login-option" id="adminLoginBtn">
+                    <h3>⚙️ Administrator Login</h3>
+                    <p>Manage questions and view results</p>
+                </div>
             </div>
         </div>
 
-        <div id="results" class="hidden">
-            <h2>🎉 Assessment Complete!</h2>
-            <div id="score"></div>
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn" onclick="restart()">🔄 Take Again</button>
-                <button class="btn" onclick="showAll()" style="background: #6c757d;">📊 Admin: View All Results</button>
+        <!-- Authentication Container -->
+        <div id="authContainer" class="auth-container">
+            <h2 id="authTitle">AWS Authentication Required</h2>
+            <p id="authDescription" style="margin-bottom: 20px;">Please authenticate with your AWS credentials.</p>
+            <input type="text" id="awsAlias" class="input-field" placeholder="Enter your AWS alias (e.g., axchibob)" style="max-width: 300px; margin: 0 auto 15px auto; display: block;">
+            <button id="authenticateBtn" class="btn">Authenticate with AWS SSO</button>
+            <div id="authStatus" style="margin-top: 15px; color: #666;"></div>
+            <button id="backToSelectionBtn" class="btn btn-secondary" style="margin-top: 10px;">Back to Selection</button>
+        </div>
+
+        <!-- User Info -->
+        <div id="userInfo" class="user-info hidden">
+            <strong>Welcome:</strong> <span id="userName"></span> | 
+            <strong>Role:</strong> <span id="userRole"></span> | 
+            <button id="logoutBtn" class="btn btn-secondary" style="padding: 5px 15px; font-size: 14px;">Logout</button>
+        </div>
+
+        <!-- Restriction Notice -->
+        <div id="restrictionNotice" class="restriction-notice hidden">
+            <strong>Assessment Restriction:</strong> You have already taken the assessment this week. 
+            You can take the next assessment on <span id="nextAvailableDate"></span>.
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel">
+            <div class="admin-tabs">
+                <button class="admin-tab active" id="questionsTabBtn">Manage Questions</button>
+                <button class="admin-tab" id="adminsTabBtn">Manage Admins</button>
+                <button class="admin-tab" id="resultsTabBtn">View Results</button>
+                <button class="admin-tab" id="analyticsTabBtn">Analytics</button>
+            </div>
+
+            <!-- Questions Management -->
+            <div id="questionsTab" class="admin-content active">
+                <h3>Question Bank Management</h3>
+                
+                <div class="question-form">
+                    <h4>Add New Question</h4>
+                    <select id="newQuestionCategory" class="select-field">
+                        <option value="">Select Category</option>
+                    </select>
+                    <textarea id="newQuestionText" class="textarea-field" placeholder="Enter question text"></textarea>
+                    
+                    <div id="optionsContainer">
+                        <div class="option-input">
+                            <input type="radio" name="correctOption" value="0">
+                            <input type="text" placeholder="Option 1" id="option0">
+                        </div>
+                        <div class="option-input">
+                            <input type="radio" name="correctOption" value="1">
+                            <input type="text" placeholder="Option 2" id="option1">
+                        </div>
+                        <div class="option-input">
+                            <input type="radio" name="correctOption" value="2">
+                            <input type="text" placeholder="Option 3" id="option2">
+                        </div>
+                        <div class="option-input">
+                            <input type="radio" name="correctOption" value="3">
+                            <input type="text" placeholder="Option 4" id="option3">
+                        </div>
+                    </div>
+                    
+                    <button id="addQuestionBtn" class="btn">Add Question</button>
+                </div>
+
+                <div>
+                    <h4>Existing Questions</h4>
+                    <select id="categoryFilter" class="select-field">
+                        <option value="">All Categories</option>
+                    </select>
+                    <div id="questionsList"></div>
+                </div>
+            </div>
+
+            <!-- Admin Management -->
+            <div id="adminsTab" class="admin-content">
+                <h3>Administrator Management</h3>
+                
+                <div class="question-form">
+                    <h4>Add New Administrator</h4>
+                    <input type="text" id="newAdminAlias" class="input-field" placeholder="Enter AWS alias (e.g., jsmith)">
+                    <button id="addAdminBtn" class="btn">Add Administrator</button>
+                </div>
+
+                <div class="admin-list">
+                    <h4>Current Administrators</h4>
+                    <div id="adminsList"></div>
+                </div>
+            </div>
+
+            <!-- Results View -->
+            <div id="resultsTab" class="admin-content">
+                <h3>Assessment Results</h3>
+                <div>
+                    <label>Filter by date range:</label>
+                    <input type="date" id="startDate" class="input-field" style="width: auto; display: inline-block; margin-right: 10px;">
+                    <input type="date" id="endDate" class="input-field" style="width: auto; display: inline-block; margin-right: 10px;">
+                    <button id="filterResultsBtn" class="btn">Filter</button>
+                    <button id="exportResultsBtn" class="btn btn-secondary">Export CSV</button>
+                </div>
+                <table id="resultsTable" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Conductor</th>
+                            <th>Score</th>
+                            <th>Time Taken</th>
+                            <th>Questions Answered</th>
+                            <th>Best Category</th>
+                            <th>Worst Category</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Analytics -->
+            <div id="analyticsTab" class="admin-content">
+                <h3>Assessment Analytics</h3>
+                <div id="analyticsContent">
+                    <div class="category-results" id="analyticsStats"></div>
+                </div>
             </div>
         </div>
 
-        <div id="allResults" class="hidden">
-            <h3>📋 All Assessment Results (Admin View)</h3>
-            <div id="resultsList"></div>
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn" onclick="hideAll()">← Back to Results</button>
-                <button class="btn" onclick="exportCSV()" style="background: #28a745;">📥 Export to CSV</button>
-                <button class="btn" onclick="clearAll()" style="background: #dc3545;">🗑️ Clear All Data</button>
+        <!-- Progress Bar -->
+        <div id="progressContainer" class="hidden">
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+            </div>
+            <p style="text-align: center; margin-bottom: 20px;">
+                Question <span id="currentQuestion">1</span> of <span id="totalQuestions">25</span>
+            </p>
+        </div>
+
+        <!-- Question Container -->
+        <div id="questionContainer" class="question-container">
+            <div class="question-header">
+                <div class="question-number">Question <span id="questionNum">1</span></div>
+                <div class="timer">Time: <span id="timer">00:00</span></div>
+                <div class="category-badge" id="categoryBadge">Category</div>
+            </div>
+            
+            <div class="question-text" id="questionText"></div>
+            
+            <ul class="options" id="optionsList"></ul>
+            
+            <div class="navigation">
+                <button id="prevBtn" class="btn" disabled>Previous</button>
+                <button id="nextBtn" class="btn">Next</button>
+            </div>
+        </div>
+
+        <!-- Start Form -->
+        <div id="startForm" class="start-form hidden">
+            <h2>Begin Assessment</h2>
+            <p style="margin-bottom: 20px;">You are eligible to take the assessment. Click below to begin.</p>
+            
+            <p style="margin-bottom: 20px; color: #666;">
+                <strong>Assessment Details:</strong><br>
+                • 25 questions selected randomly from 10 security categories<br>
+                • Minimum 2 questions per category, maximum 4 questions per category<br>
+                • Timer will track your completion time<br>
+                • Results will be stored for administrative review<br>
+                • You can only take this assessment once per week (Monday-Friday)
+            </p>
+            
+            <button id="startTestBtn" class="btn">Start Assessment</button>
+        </div>
+
+        <!-- Results -->
+        <div id="results" class="results">
+            <h2>Assessment Results</h2>
+            
+            <div class="score-summary">
+                <div class="score-number" id="finalScore">0%</div>
+                <p>Overall Score</p>
+                <p><strong>Conductor:</strong> <span id="resultConductor"></span></p>
+                <p><strong>Time Taken:</strong> <span id="resultTime"></span></p>
+                <p><strong>Questions Answered:</strong> <span id="resultAnswered"></span>/25</p>
+            </div>
+            
+            <h3>Category Performance</h3>
+            <div id="categoryResults" class="category-results"></div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="color: #666; margin-bottom: 15px;">
+                    Your results have been saved. You can take the next assessment after this week ends.
+                </p>
             </div>
         </div>
     </div>
 
     <script>
-        const questions = [
-            {
-                question: "What is the main purpose of a firewall in network security?",
-                options: ["Speed up internet connection", "Monitor and control incoming/outgoing network traffic", "Store user passwords securely", "Automatically update software"],
-                correct: 1,
-                category: "Network Security"
+        // Application state
+        let currentUser = null;
+        let isAdmin = false;
+        let selectedLoginType = null;
+        let currentTest = {
+            startTime: null,
+            endTime: null,
+            questions: [],
+            currentQuestionIndex: 0,
+            answers: {},
+            timerInterval: null
+        };
+
+        // Complete question bank with 25 questions per category
+        let applicationData = {
+            admins: ['axchibob'], // Your AWS alias with full admin rights
+            questionBank: {
+                "Physical Security": [
+                    {
+                        question: "What is the primary purpose of a mantrap in data center security?",
+                        options: ["Prevent tailgating", "Monitor temperature", "Control airflow", "Reduce noise"],
+                        correct: 0
+                    },
+                    {
+                        question: "How often should security cameras be tested for functionality?",
+                        options: ["Daily", "Weekly", "Monthly", "Quarterly"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is the minimum number of authentication factors required for high-security areas?",
+                        options: ["One", "Two", "Three", "Four"],
+                        correct: 1
+                    },
+                    {
+                        question: "Which type of lock is most secure for server racks?",
+                        options: ["Key lock", "Combination lock", "Electronic lock", "Padlock"],
+                        correct: 2
+                    },
+                    {
+                        question: "What should you do if you notice a security camera is not functioning?",
+                        options: ["Ignore it", "Report immediately", "Fix it yourself", "Wait for maintenance"],
+                        correct: 1
+                    },
+                    {
+                        question: "How long should visitor logs be retained?",
+                        options: ["30 days", "90 days", "1 year", "2 years"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is the purpose of security zones in a data center?",
+                        options: ["Temperature control", "Access control", "Power distribution", "Network segmentation"],
+                        correct: 1
+                    },
+                    {
+                        question: "When should security badges be deactivated?",
+                        options: ["End of shift", "End of week", "Immediately upon termination", "End of month"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is the recommended height for perimeter fencing?",
+                        options: ["6 feet", "8 feet", "10 feet", "12 feet"],
+                        correct: 1
+                    },
+                    {
+                        question: "How should sensitive documents be disposed of?",
+                        options: ["Regular trash", "Recycling", "Secure shredding", "Burning"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is the purpose of security lighting around a facility?",
+                        options: ["Decoration", "Deterrence and detection", "Energy saving", "Cost reduction"],
+                        correct: 1
+                    },
+                    {
+                        question: "How often should access control systems be audited?",
+                        options: ["Daily", "Weekly", "Monthly", "Quarterly"],
+                        correct: 3
+                    },
+                    {
+                        question: "What should be done with lost security badges?",
+                        options: ["Wait for return", "Deactivate immediately", "Issue replacement", "Both B and C"],
+                        correct: 3
+                    },
+                    {
+                        question: "What is the minimum resolution for security cameras?",
+                        options: ["720p", "1080p", "4K", "8K"],
+                        correct: 1
+                    },
+                    {
+                        question: "How should emergency exits be secured?",
+                        options: ["Always locked", "Alarmed but accessible", "Key card access", "Biometric access"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of security rounds?",
+                        options: ["Exercise", "Deterrence", "Equipment check", "All of the above"],
+                        correct: 3
+                    },
+                    {
+                        question: "How should visitors be escorted in secure areas?",
+                        options: ["Not required", "At all times", "Only in restricted areas", "During business hours only"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the recommended backup power duration for security systems?",
+                        options: ["1 hour", "4 hours", "8 hours", "24 hours"],
+                        correct: 3
+                    },
+                    {
+                        question: "How should security incidents be documented?",
+                        options: ["Verbal report only", "Written report within 24 hours", "Email summary", "No documentation needed"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of security awareness training?",
+                        options: ["Legal compliance", "Risk reduction", "Employee education", "All of the above"],
+                        correct: 3
+                    },
+                    {
+                        question: "What type of glass should be used in high-security areas?",
+                        options: ["Regular glass", "Tempered glass", "Laminated security glass", "Plastic glass"],
+                        correct: 2
+                    },
+                    {
+                        question: "How should security keys be managed?",
+                        options: ["Freely distributed", "Controlled distribution with logging", "One master key for all", "No key management needed"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of bollards around a facility?",
+                        options: ["Decoration", "Vehicle barrier protection", "Lighting support", "Signage mounting"],
+                        correct: 1
+                    },
+                    {
+                        question: "How should security alarm systems be tested?",
+                        options: ["Never test", "Monthly testing", "Annual testing only", "When problems occur"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the recommended approach for security guard rotations?",
+                        options: ["Same guard always", "Regular rotation to prevent complacency", "Random assignments", "No specific approach"],
+                        correct: 1
+                    }
+                ],
+                "Access Control": [
+                    {
+                        question: "What does the principle of least privilege mean?",
+                        options: ["Maximum access for efficiency", "Minimum access required for job function", "Equal access for all", "No access restrictions"],
+                        correct: 1
+                    },
+                    {
+                        question: "How often should access rights be reviewed?",
+                        options: ["Daily", "Weekly", "Monthly", "Quarterly"],
+                        correct: 3
+                    },
+                    {
+                        question: "What is role-based access control (RBAC)?",
+                        options: ["Access based on user role", "Access based on time", "Access based on location", "Access based on device"],
+                        correct: 0
+                    },
+                    {
+                        question: "When should temporary access be granted?",
+                        options: ["Never", "Only for emergencies", "For specific business needs with approval", "Anytime requested"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is the purpose of access logging?",
+                        options: ["Performance monitoring", "Security auditing", "System maintenance", "User convenience"],
+                        correct: 1
+                    },
+                    {
+                        question: "How should shared accounts be managed?",
+                        options: ["Freely shared", "Avoided when possible", "Used for convenience", "No special requirements"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is multi-factor authentication?",
+                        options: ["Multiple passwords", "Multiple users", "Multiple authentication methods", "Multiple attempts"],
+                        correct: 2
+                    },
+                    {
+                        question: "When should access be immediately revoked?",
+                        options: ["End of project", "Employee termination", "Role change", "All of the above"],
+                        correct: 3
+                    },
+                    {
+                        question: "What is the purpose of access request workflows?",
+                        options: ["Slow down processes", "Ensure proper approval", "Create paperwork", "Avoid responsibility"],
+                        correct: 1
+                    },
+                    {
+                        question: "How should emergency access be handled?",
+                        options: ["No emergency access", "Unlimited access", "Controlled emergency procedures", "Manager approval only"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is privilege escalation?",
+                        options: ["Increasing user access", "Decreasing user access", "Unauthorized access increase", "Normal access procedure"],
+                        correct: 2
+                    },
+                    {
+                        question: "How should contractor access be managed?",
+                        options: ["Same as employees", "More restrictive", "Less restrictive", "No access allowed"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of access certification?",
+                        options: ["Legal requirement", "Verify appropriate access", "User training", "System performance"],
+                        correct: 1
+                    },
+                    {
+                        question: "When should access be automatically disabled?",
+                        options: ["Never", "After inactivity period", "Weekly", "Monthly"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is segregation of duties?",
+                        options: ["Separating conflicting responsibilities", "Working in teams", "Shift scheduling", "Task automation"],
+                        correct: 0
+                    },
+                    {
+                        question: "How should privileged accounts be monitored?",
+                        options: ["No monitoring needed", "Basic logging", "Enhanced monitoring", "User self-monitoring"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is just-in-time access?",
+                        options: ["Permanent access", "Temporary elevated access", "Scheduled access", "Random access"],
+                        correct: 1
+                    },
+                    {
+                        question: "How should access violations be handled?",
+                        options: ["Ignore minor violations", "Investigate all violations", "User self-reporting", "Monthly reviews only"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of access matrices?",
+                        options: ["System performance", "Define access relationships", "User convenience", "Cost reduction"],
+                        correct: 1
+                    },
+                    {
+                        question: "When should access policies be updated?",
+                        options: ["Never", "Annually", "When business needs change", "Only during audits"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is attribute-based access control (ABAC)?",
+                        options: ["Access based on user attributes", "Access based on time only", "Access based on location only", "Access based on device only"],
+                        correct: 0
+                    },
+                    {
+                        question: "How should service accounts be managed?",
+                        options: ["Same as user accounts", "Special management procedures", "No management needed", "Shared freely"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of access provisioning?",
+                        options: ["Remove access", "Grant appropriate access", "Monitor access", "Audit access"],
+                        correct: 1
+                    },
+                    {
+                        question: "How should access be managed during employee transfers?",
+                        options: ["Keep same access", "Review and adjust access", "Remove all access", "Add more access"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the principle of need-to-know?",
+                        options: ["Everyone should know everything", "Access only to necessary information", "Managers know everything", "No information sharing"],
+                        correct: 1
+                    }
+                ],
+                "Network Security": [
+                    {
+                        question: "What is the primary purpose of a firewall?",
+                        options: ["Increase speed", "Control network traffic", "Store data", "Monitor users"],
+                        correct: 1
+                    },
+                    {
+                        question: "What does VPN stand for?",
+                        options: ["Virtual Private Network", "Very Private Network", "Verified Private Network", "Variable Private Network"],
+                        correct: 0
+                    },
+                    {
+                        question: "What is network segmentation?",
+                        options: ["Dividing network into smaller parts", "Combining networks", "Increasing bandwidth", "Reducing costs"],
+                        correct: 0
+                    },
+                    {
+                        question: "What is the purpose of intrusion detection systems?",
+                        options: ["Prevent all attacks", "Monitor and alert on suspicious activity", "Increase network speed", "Reduce costs"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a DMZ in network security?",
+                        options: ["Demilitarized Zone", "Data Management Zone", "Direct Memory Zone", "Dynamic Management Zone"],
+                        correct: 0
+                    },
+                    {
+                        question: "How often should network security policies be reviewed?",
+                        options: ["Daily", "Weekly", "Monthly", "Annually or when changes occur"],
+                        correct: 3
+                    },
+                    {
+                        question: "What is the difference between IDS and IPS?",
+                        options: ["No difference", "IDS detects, IPS prevents", "IPS detects, IDS prevents", "Both are the same"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is network access control (NAC)?",
+                        options: ["Speed control", "Device authentication and authorization", "Cost management", "User training"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of network monitoring?",
+                        options: ["Increase costs", "Detect anomalies and threats", "Slow down network", "Complicate operations"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a VLAN?",
+                        options: ["Virtual Local Area Network", "Very Large Area Network", "Variable Local Area Network", "Verified Local Area Network"],
+                        correct: 0
+                    },
+                    {
+                        question: "What is the principle of defense in depth?",
+                        options: ["Single strong defense", "Multiple layers of security", "No security needed", "Minimal security"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is network encryption?",
+                        options: ["Slowing down network", "Protecting data in transit", "Increasing bandwidth", "Reducing costs"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a honeypot in network security?",
+                        options: ["Sweet network treat", "Decoy system to attract attackers", "High-speed connection", "Cost-saving measure"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of network logging?",
+                        options: ["Waste storage", "Track network activity", "Slow down systems", "Increase complexity"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is bandwidth throttling?",
+                        options: ["Increasing speed", "Limiting data transfer rate", "Monitoring users", "Reducing security"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a security zone?",
+                        options: ["Physical location", "Network segment with similar security requirements", "User group", "Time period"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of network redundancy?",
+                        options: ["Increase costs", "Ensure availability", "Complicate management", "Reduce performance"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a network security baseline?",
+                        options: ["Minimum security standards", "Maximum performance", "Cost target", "User preference"],
+                        correct: 0
+                    },
+                    {
+                        question: "What is the purpose of network vulnerability scanning?",
+                        options: ["Create vulnerabilities", "Identify security weaknesses", "Slow down network", "Increase costs"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is zero trust networking?",
+                        options: ["No security", "Trust but verify", "Never trust, always verify", "Trust everyone"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is the purpose of SSL/TLS?",
+                        options: ["Speed up connections", "Encrypt data in transit", "Reduce bandwidth", "Monitor traffic"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a network perimeter?",
+                        options: ["Center of network", "Boundary between trusted and untrusted networks", "Fastest part of network", "Storage area"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of port scanning?",
+                        options: ["Increase security", "Identify open network ports", "Speed up network", "Reduce costs"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is network forensics?",
+                        options: ["Network design", "Investigation of network incidents", "Network optimization", "Network installation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the purpose of network isolation?",
+                        options: ["Connect everything", "Separate network segments", "Increase speed", "Reduce costs"],
+                        correct: 1
+                    }
+                ],
+                "Data Protection": [
+                    {
+                        question: "What is data classification?",
+                        options: ["Organizing files", "Categorizing data by sensitivity", "Deleting old data", "Backing up data"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data encryption?",
+                        options: ["Data compression", "Converting data to unreadable format", "Data backup", "Data deletion"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data retention?",
+                        options: ["Keeping data forever", "Keeping data for required period", "Deleting all data", "Sharing all data"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data masking?",
+                        options: ["Hiding data location", "Obscuring sensitive data", "Encrypting data", "Deleting data"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data loss prevention (DLP)?",
+                        options: ["Backup system", "Preventing unauthorized data disclosure", "Data compression", "Data analysis"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is personally identifiable information (PII)?",
+                        options: ["Public information", "Information that identifies individuals", "Company data", "System logs"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data anonymization?",
+                        options: ["Making data public", "Removing identifying information", "Encrypting data", "Backing up data"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data integrity?",
+                        options: ["Data speed", "Data accuracy and consistency", "Data size", "Data location"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data governance?",
+                        options: ["Data storage", "Managing data assets", "Data deletion", "Data sharing"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data lineage?",
+                        options: ["Data age", "Data origin and movement", "Data size", "Data type"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data sovereignty?",
+                        options: ["Data ownership", "Legal control over data location", "Data sharing", "Data deletion"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data minimization?",
+                        options: ["Collecting maximum data", "Collecting only necessary data", "Deleting all data", "Sharing all data"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data breach notification?",
+                        options: ["Optional reporting", "Required reporting of data incidents", "Internal memo", "Public announcement"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data portability?",
+                        options: ["Data cannot move", "Ability to transfer data", "Data storage", "Data deletion"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data residency?",
+                        options: ["Data age", "Physical location of data", "Data type", "Data owner"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data quality?",
+                        options: ["Data quantity", "Data accuracy and reliability", "Data speed", "Data location"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data discovery?",
+                        options: ["Creating data", "Finding and cataloging data", "Deleting data", "Sharing data"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data lifecycle management?",
+                        options: ["Data creation only", "Managing data from creation to disposal", "Data storage only", "Data sharing only"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data tokenization?",
+                        options: ["Data compression", "Replacing sensitive data with tokens", "Data encryption", "Data deletion"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data stewardship?",
+                        options: ["Data ownership", "Responsible management of data", "Data creation", "Data deletion"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data profiling?",
+                        options: ["Data creation", "Analyzing data characteristics", "Data deletion", "Data sharing"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data archiving?",
+                        options: ["Data deletion", "Long-term data storage", "Data sharing", "Data creation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data validation?",
+                        options: ["Data creation", "Checking data accuracy", "Data deletion", "Data sharing"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data mapping?",
+                        options: ["Data location", "Understanding data relationships", "Data creation", "Data deletion"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is data catalog?",
+                        options: ["Data storage", "Inventory of data assets", "Data creation", "Data deletion"],
+                        correct: 1
+                    }
+                ],
+                "Incident Response": [
+                    {
+                        question: "What is the first step in incident response?",
+                        options: ["Fix the problem", "Identify and contain", "Document everything", "Notify management"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident containment?",
+                        options: ["Ignoring the incident", "Limiting incident impact", "Documenting incident", "Reporting incident"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident eradication?",
+                        options: ["Containing incident", "Removing threat from environment", "Documenting incident", "Preventing incidents"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident recovery?",
+                        options: ["Finding incidents", "Restoring normal operations", "Preventing incidents", "Documenting incidents"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a security incident?",
+                        options: ["Normal operation", "Violation of security policy", "System upgrade", "User training"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident classification?",
+                        options: ["Ignoring incidents", "Categorizing incident severity", "Fixing incidents", "Preventing incidents"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident escalation?",
+                        options: ["Reducing incident priority", "Increasing incident priority", "Ignoring incident", "Documenting incident"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is forensic analysis?",
+                        options: ["Preventing incidents", "Investigating incident evidence", "Fixing systems", "User training"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident documentation?",
+                        options: ["Optional activity", "Recording incident details", "Fixing problems", "Preventing incidents"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident communication?",
+                        options: ["Keeping quiet", "Informing stakeholders", "Fixing problems", "Preventing incidents"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident timeline?",
+                        options: ["Random events", "Chronological sequence of events", "Future planning", "Past history"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident impact assessment?",
+                        options: ["Ignoring effects", "Evaluating incident consequences", "Fixing problems", "Preventing incidents"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident response team?",
+                        options: ["Individual responder", "Group handling incidents", "Management team", "User group"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident playbook?",
+                        options: ["Game rules", "Response procedures", "User manual", "System documentation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident triage?",
+                        options: ["Ignoring incidents", "Prioritizing incidents", "Fixing all incidents", "Preventing incidents"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident closure?",
+                        options: ["Starting incident", "Completing incident response", "Ignoring incident", "Escalating incident"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is lessons learned?",
+                        options: ["Ignoring experience", "Learning from incidents", "Repeating mistakes", "Avoiding analysis"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident metrics?",
+                        options: ["Ignoring data", "Measuring response performance", "Guessing results", "Avoiding measurement"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident simulation?",
+                        options: ["Real incident", "Practice exercise", "Ignoring training", "Avoiding preparation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident notification?",
+                        options: ["Keeping quiet", "Alerting relevant parties", "Ignoring stakeholders", "Delaying communication"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident severity?",
+                        options: ["All incidents same", "Impact level classification", "Ignoring impact", "Random assignment"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident attribution?",
+                        options: ["Ignoring source", "Identifying threat actor", "Blaming users", "Random assignment"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident validation?",
+                        options: ["Assuming all alerts", "Confirming real incident", "Ignoring alerts", "Random response"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident coordination?",
+                        options: ["Working alone", "Managing team response", "Ignoring others", "Random actions"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident reporting?",
+                        options: ["Keeping quiet", "Formal incident documentation", "Informal chat", "Ignoring requirements"],
+                        correct: 1
+                    }
+                ],
+                "Compliance": [
+                    {
+                        question: "What is regulatory compliance?",
+                        options: ["Optional guidelines", "Adhering to laws and regulations", "Internal preferences", "Cost-saving measures"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is an audit?",
+                        options: ["Casual review", "Formal examination of compliance", "Informal discussion", "Optional activity"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a compliance framework?",
+                        options: ["Building structure", "Set of compliance requirements", "Software tool", "Hardware device"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is due diligence?",
+                        options: ["Minimal effort", "Reasonable care and investigation", "Maximum speed", "Cost reduction"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a control?",
+                        options: ["Management tool", "Safeguard or countermeasure", "Software application", "Hardware device"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is compliance monitoring?",
+                        options: ["One-time check", "Ongoing compliance verification", "Annual review", "Optional activity"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a compliance gap?",
+                        options: ["Perfect compliance", "Difference between current and required state", "Excess compliance", "No requirements"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is attestation?",
+                        options: ["Denial", "Formal declaration of compliance", "Informal statement", "Optional report"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is remediation?",
+                        options: ["Ignoring issues", "Correcting compliance deficiencies", "Creating problems", "Avoiding action"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a compliance officer?",
+                        options: ["Any employee", "Person responsible for compliance", "External consultant", "Software tool"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is regulatory reporting?",
+                        options: ["Optional communication", "Required compliance reporting", "Internal memo", "Casual update"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a compliance program?",
+                        options: ["Software application", "Systematic approach to compliance", "One-time activity", "Optional initiative"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is non-compliance?",
+                        options: ["Perfect compliance", "Failure to meet requirements", "Exceeding requirements", "Optional compliance"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a compliance assessment?",
+                        options: ["Ignoring requirements", "Evaluation of compliance status", "Creating requirements", "Avoiding evaluation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is compliance training?",
+                        options: ["Optional learning", "Required education on compliance", "Entertainment", "Casual discussion"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a compliance violation?",
+                        options: ["Perfect compliance", "Breach of compliance requirements", "Exceeding requirements", "Optional compliance"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is compliance documentation?",
+                        options: ["Optional records", "Required compliance records", "Casual notes", "Personal files"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a compliance standard?",
+                        options: ["Optional guideline", "Required compliance specification", "Suggestion", "Personal preference"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is compliance testing?",
+                        options: ["Ignoring controls", "Verifying control effectiveness", "Creating problems", "Avoiding verification"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a compliance policy?",
+                        options: ["Optional guideline", "Formal compliance requirements", "Casual suggestion", "Personal opinion"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is compliance risk?",
+                        options: ["No risk", "Risk of non-compliance consequences", "Guaranteed success", "Optional concern"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a compliance checklist?",
+                        options: ["Shopping list", "List of compliance requirements", "Random items", "Optional tool"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is compliance culture?",
+                        options: ["Ignoring compliance", "Organization-wide commitment to compliance", "Individual choice", "Optional attitude"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is regulatory change management?",
+                        options: ["Ignoring changes", "Managing regulatory updates", "Avoiding updates", "Random changes"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is compliance metrics?",
+                        options: ["Ignoring measurement", "Measuring compliance performance", "Random numbers", "Optional data"],
+                        correct: 1
+                    }
+                ],
+                "Risk Management": [
+                    {
+                        question: "What is risk assessment?",
+                        options: ["Ignoring risks", "Identifying and evaluating risks", "Increasing risks", "Avoiding assessment"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk mitigation?",
+                        options: ["Increasing risk", "Reducing risk impact", "Ignoring risk", "Creating risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk tolerance?",
+                        options: ["Zero risk", "Acceptable level of risk", "Maximum risk", "Ignoring risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk appetite?",
+                        options: ["Risk avoidance", "Willingness to take risk", "Risk ignorance", "Risk creation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is inherent risk?",
+                        options: ["Risk after controls", "Risk before controls", "No risk", "Controlled risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is residual risk?",
+                        options: ["Risk before controls", "Risk after controls", "No risk", "Maximum risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk transfer?",
+                        options: ["Keeping all risk", "Moving risk to others", "Eliminating risk", "Creating risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk acceptance?",
+                        options: ["Rejecting risk", "Acknowledging and accepting risk", "Eliminating risk", "Transferring risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk avoidance?",
+                        options: ["Taking maximum risk", "Eliminating risk by avoiding activity", "Accepting all risk", "Transferring risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a risk register?",
+                        options: ["Risk creation tool", "Document listing identified risks", "Risk elimination tool", "Risk ignorance tool"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk monitoring?",
+                        options: ["One-time risk check", "Ongoing risk observation", "Risk creation", "Risk elimination"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk impact?",
+                        options: ["Risk probability", "Consequence of risk occurrence", "Risk elimination", "Risk creation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk likelihood?",
+                        options: ["Risk impact", "Probability of risk occurrence", "Risk elimination", "Risk acceptance"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk matrix?",
+                        options: ["Risk creation tool", "Tool for plotting risk likelihood and impact", "Risk elimination method", "Risk ignorance approach"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is enterprise risk management?",
+                        options: ["Individual risk management", "Organization-wide risk management", "Risk elimination", "Risk creation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is operational risk?",
+                        options: ["Strategic risk", "Risk from business operations", "Financial risk", "No risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is strategic risk?",
+                        options: ["Operational risk", "Risk to business strategy", "Financial risk", "No risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is financial risk?",
+                        options: ["Operational risk", "Risk of financial loss", "Strategic risk", "No risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is reputational risk?",
+                        options: ["Financial risk", "Risk to organization reputation", "Operational risk", "No risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is compliance risk?",
+                        options: ["Operational risk", "Risk of regulatory violations", "Financial risk", "No risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is cyber risk?",
+                        options: ["Physical risk", "Risk from cyber threats", "Financial risk", "No risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is third-party risk?",
+                        options: ["Internal risk", "Risk from external parties", "No risk", "Self-created risk"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk governance?",
+                        options: ["Risk creation", "Framework for risk oversight", "Risk elimination", "Risk ignorance"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk culture?",
+                        options: ["Risk ignorance", "Organization attitude toward risk", "Risk elimination", "Risk creation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is risk reporting?",
+                        options: ["Hiding risks", "Communicating risk information", "Creating risks", "Eliminating risks"],
+                        correct: 1
+                    }
+                ],
+                "Security Awareness": [
+                    {
+                        question: "What is social engineering?",
+                        options: ["Building design", "Manipulating people to divulge information", "Network engineering", "Software development"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is phishing?",
+                        options: ["Fishing activity", "Fraudulent attempt to obtain sensitive information", "Network monitoring", "System maintenance"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a strong password?",
+                        options: ["Short and simple", "Long, complex, and unique", "Common words", "Personal information"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is multi-factor authentication?",
+                        options: ["Single password", "Multiple authentication methods", "No authentication", "Weak authentication"],
+                        correct: 1
+                    },
+                    {
+                        question: "What should you do with suspicious emails?",
+                        options: ["Open immediately", "Report and delete", "Forward to friends", "Ignore completely"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is tailgating?",
+                        options: ["Following cars", "Following someone through secure doors", "Network monitoring", "System backup"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is pretexting?",
+                        options: ["Writing text", "Creating false scenario to obtain information", "System testing", "Network configuration"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is baiting?",
+                        options: ["Fishing activity", "Offering something to trigger action", "System monitoring", "Network maintenance"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is quid pro quo?",
+                        options: ["Latin phrase", "Offering service for information", "System update", "Network security"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is shoulder surfing?",
+                        options: ["Water sport", "Observing someone enter information", "System monitoring", "Network analysis"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is dumpster diving?",
+                        options: ["Water sport", "Searching trash for information", "System backup", "Network maintenance"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is vishing?",
+                        options: ["Video calling", "Voice phishing", "System monitoring", "Network testing"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is smishing?",
+                        options: ["Email phishing", "SMS phishing", "Voice phishing", "No phishing"],
+                        correct: 1
+                    },
+                    {
+                        question: "What should you do if you suspect a security incident?",
+                        options: ["Ignore it", "Report immediately", "Fix it yourself", "Wait and see"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is clean desk policy?",
+                        options: ["Messy workspace", "Securing sensitive information", "Cleaning supplies", "Office decoration"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is acceptable use policy?",
+                        options: ["No restrictions", "Guidelines for system use", "Hardware specifications", "Software requirements"],
+                        correct: 1
+                    },
+                    {
+                        question: "What should you do when leaving your workstation?",
+                        options: ["Leave it open", "Lock the screen", "Turn off computer", "Leave password visible"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is security awareness training?",
+                        options: ["Technical training", "Education about security threats", "Software training", "Hardware training"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the principle of need-to-know?",
+                        options: ["Everyone knows everything", "Access only necessary information", "No information sharing", "Random information access"],
+                        correct: 1
+                    },
+                    {
+                        question: "What should you do with USB drives from unknown sources?",
+                        options: ["Use immediately", "Never use without scanning", "Share with others", "Ignore completely"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is security culture?",
+                        options: ["Individual responsibility", "Organization-wide security mindset", "Technical controls only", "Management responsibility only"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is insider threat?",
+                        options: ["External threat only", "Threat from within organization", "No real threat", "Technical threat only"],
+                        correct: 1
+                    },
+                    {
+                        question: "What should you do if you receive a suspicious phone call?",
+                        options: ["Provide all information", "Verify caller identity", "Hang up immediately", "Transfer to anyone"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is security incident reporting?",
+                        options: ["Optional activity", "Required reporting of security events", "Management decision", "Technical team responsibility"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the human element in security?",
+                        options: ["Weakest link", "Important security component", "Not important", "Technical issue only"],
+                        correct: 1
+                    }
+                ],
+                "Business Continuity": [
+                    {
+                        question: "What is business continuity planning?",
+                        options: ["Daily operations", "Preparing for disruptions", "Profit planning", "Staff scheduling"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is disaster recovery?",
+                        options: ["Preventing disasters", "Restoring operations after disaster", "Creating disasters", "Ignoring disasters"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is business impact analysis?",
+                        options: ["Financial analysis", "Assessment of disruption effects", "Market analysis", "Competitor analysis"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is recovery time objective (RTO)?",
+                        options: ["Time to create backup", "Maximum acceptable downtime", "Time to plan", "Time to train"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is recovery point objective (RPO)?",
+                        options: ["Point of failure", "Maximum acceptable data loss", "Recovery location", "Recovery team"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a hot site?",
+                        options: ["Warm location", "Fully operational backup facility", "Storage location", "Meeting room"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a cold site?",
+                        options: ["Cool location", "Basic backup facility", "Storage location", "No facility"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a warm site?",
+                        options: ["Hot location", "Partially equipped backup facility", "Cold location", "No facility"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is crisis management?",
+                        options: ["Creating crisis", "Managing crisis response", "Ignoring crisis", "Avoiding crisis"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency response?",
+                        options: ["Slow response", "Immediate response to emergencies", "No response", "Delayed response"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is business continuity testing?",
+                        options: ["No testing needed", "Verifying plan effectiveness", "Creating problems", "Avoiding testing"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is alternate processing site?",
+                        options: ["Primary site", "Backup processing location", "Storage site", "No site"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is essential personnel?",
+                        options: ["All employees", "Critical staff for operations", "Management only", "No personnel"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is supply chain continuity?",
+                        options: ["Ignoring suppliers", "Ensuring supplier availability", "Single supplier", "No suppliers"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is communication plan?",
+                        options: ["No communication", "Strategy for crisis communication", "Daily communication", "Random communication"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is maximum tolerable downtime?",
+                        options: ["No downtime limit", "Longest acceptable outage", "Minimum downtime", "Planned downtime"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is business continuity coordinator?",
+                        options: ["Any employee", "Person managing BC program", "External consultant", "No coordinator"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is continuity strategy?",
+                        options: ["No strategy", "Plan for maintaining operations", "Growth strategy", "Marketing strategy"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is mutual aid agreement?",
+                        options: ["No agreement", "Reciprocal assistance arrangement", "One-way agreement", "Competitive agreement"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is business resumption?",
+                        options: ["Business closure", "Returning to normal operations", "Business expansion", "Business merger"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is continuity awareness?",
+                        options: ["Ignoring continuity", "Understanding continuity importance", "Avoiding training", "No awareness needed"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is tabletop exercise?",
+                        options: ["Physical exercise", "Discussion-based training", "Computer simulation", "No exercise"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is full-scale exercise?",
+                        options: ["Small test", "Complete simulation of disaster", "Partial test", "No exercise"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is business continuity audit?",
+                        options: ["Financial audit", "Review of BC program", "No audit needed", "Operational audit"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is continuity plan maintenance?",
+                        options: ["One-time activity", "Regular plan updates", "No maintenance", "Annual review only"],
+                        correct: 1
+                    }
+                ],
+                "Emergency Procedures": [
+                    {
+                        question: "What is the first priority during any emergency?",
+                        options: ["Save equipment", "Protect human life", "Minimize costs", "Continue operations"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is an evacuation plan?",
+                        options: ["Stay in place", "Procedure for leaving safely", "Equipment removal", "Data backup"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is a muster point?",
+                        options: ["Starting point", "Assembly location after evacuation", "Equipment storage", "Command center"],
+                        correct: 1
+                    },
+                    {
+                        question: "What should you do when you hear a fire alarm?",
+                        options: ["Ignore it", "Evacuate immediately", "Investigate first", "Continue working"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency communication?",
+                        options: ["Normal communication", "Critical information sharing during emergency", "No communication", "Delayed communication"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is shelter-in-place?",
+                        options: ["Evacuate immediately", "Stay in secure location", "Go outside", "Leave building"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency notification?",
+                        options: ["Optional alert", "Required emergency alert", "Delayed notification", "No notification"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is first aid?",
+                        options: ["Professional medical care", "Initial emergency medical assistance", "No assistance", "Equipment repair"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency equipment?",
+                        options: ["Normal equipment", "Special equipment for emergencies", "No equipment", "Broken equipment"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency training?",
+                        options: ["Optional training", "Required emergency preparedness education", "No training", "Equipment training"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency drill?",
+                        options: ["Real emergency", "Practice emergency response", "No practice", "Equipment test"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency coordinator?",
+                        options: ["Any person", "Designated emergency leader", "External person", "No coordinator"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency supplies?",
+                        options: ["Normal supplies", "Special emergency resources", "No supplies", "Expired supplies"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is lockdown procedure?",
+                        options: ["Open all doors", "Secure facility from threats", "Normal operations", "Evacuation"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency contact list?",
+                        options: ["Phone book", "Critical contact information", "No contacts", "Random contacts"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is incident command system?",
+                        options: ["No system", "Organized emergency management", "Chaos management", "Normal management"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency response team?",
+                        options: ["Any group", "Trained emergency responders", "No team", "Random people"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is hazard identification?",
+                        options: ["Ignoring hazards", "Recognizing potential dangers", "Creating hazards", "No identification"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency documentation?",
+                        options: ["No documentation", "Recording emergency actions", "Normal documentation", "Optional records"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is post-emergency review?",
+                        options: ["No review", "Analysis of emergency response", "Pre-emergency planning", "Normal review"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency authority?",
+                        options: ["No authority", "Power to make emergency decisions", "Normal authority", "Limited authority"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency resource management?",
+                        options: ["No resources", "Managing emergency assets", "Normal resources", "Wasting resources"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency recovery?",
+                        options: ["No recovery", "Returning to normal after emergency", "Emergency creation", "Permanent emergency"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency preparedness?",
+                        options: ["No preparation", "Readiness for emergencies", "Creating emergencies", "Ignoring emergencies"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is emergency assessment?",
+                        options: ["No assessment", "Evaluating emergency situation", "Creating assessment", "Ignoring situation"],
+                        correct: 1
+                    }
+                ]
             },
-            {
-                question: "What should you do when you receive a suspicious email?",
-                options: ["Open it immediately to investigate", "Report it to security team and delete safely", "Forward it to colleagues for their opinion", "Save it in a special folder for later"],
-                correct: 1,
-                category: "Security Awareness"
-            },
-            {
-                question: "What is phishing in cybersecurity context?",
-                options: ["A recreational fishing activity", "Fraudulent attempt to obtain sensitive information by impersonation", "A type of antivirus software", "A method of data encryption"],
-                correct: 1,
-                category: "Security Awareness"
-            },
-            {
-                question: "What does the principle of 'least privilege' mean in access control?",
-                options: ["Give users maximum access for operational efficiency", "Provide users with minimum access rights needed for their job function", "Allow unrestricted access to all systems", "Assign access rights randomly to users"],
-                correct: 1,
-                category: "Access Control"
-            },
-            {
-                question: "What is the first step in incident response procedures?",
-                options: ["Immediately start fixing the problem", "Identify, assess, and contain the security incident", "Notify all employees about the incident", "Shut down all systems immediately"],
-                correct: 1,
-                category: "Incident Response"
+            userResults: [],
+            userLastTest: {}
+        };
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadApplicationData();
+            populateCategorySelects();
+            setupEventListeners();
+            console.log('CGF Security Knowledge Assessment - Enterprise Edition loaded');
+        });
+
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Login selection
+            document.getElementById('userLoginBtn').addEventListener('click', () => selectLoginType('user'));
+            document.getElementById('adminLoginBtn').addEventListener('click', () => selectLoginType('admin'));
+            
+            // Authentication
+            document.getElementById('authenticateBtn').addEventListener('click', authenticateUser);
+            document.getElementById('backToSelectionBtn').addEventListener('click', goBackToSelection);
+            
+            // User actions
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('startTestBtn').addEventListener('click', startTest);
+            
+            // Navigation
+            document.getElementById('prevBtn').addEventListener('click', previousQuestion);
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            
+            // Admin tabs
+            document.getElementById('questionsTabBtn').addEventListener('click', () => showAdminTab('questions'));
+            document.getElementById('adminsTabBtn').addEventListener('click', () => showAdminTab('admins'));
+            document.getElementById('resultsTabBtn').addEventListener('click', () => showAdminTab('results'));
+            document.getElementById('analyticsTabBtn').addEventListener('click', () => showAdminTab('analytics'));
+            
+            // Admin actions
+            document.getElementById('addQuestionBtn').addEventListener('click', addQuestion);
+            document.getElementById('addAdminBtn').addEventListener('click', addAdmin);
+            document.getElementById('filterResultsBtn').addEventListener('click', filterResults);
+            document.getElementById('exportResultsBtn').addEventListener('click', exportResults);
+            document.getElementById('categoryFilter').addEventListener('change', filterQuestions);
+        }
+
+        // Login selection functions
+        function selectLoginType(type) {
+            selectedLoginType = type;
+            document.getElementById('loginSelection').style.display = 'none';
+            document.getElementById('authContainer').style.display = 'block';
+            
+            if (type === 'admin') {
+                document.getElementById('authTitle').textContent = 'Administrator Authentication';
+                document.getElementById('authDescription').textContent = 'Please authenticate with your AWS administrator credentials.';
+            } else {
+                document.getElementById('authTitle').textContent = 'User Authentication';
+                document.getElementById('authDescription').textContent = 'Please authenticate with your AWS credentials to take the assessment.';
             }
-        ];
+        }
 
-        let currentQ = 0;
-        let answers = [];
-        let userName = "";
-        let userAlias = "";
-        let startTime = new Date();
-        let timerInterval;
+        function goBackToSelection() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('loginSelection').style.display = 'block';
+            selectedLoginType = null;
+            document.getElementById('awsAlias').value = '';
+            document.getElementById('authStatus').textContent = '';
+        }
 
+        // Authentication functions
+        function authenticateUser() {
+            const alias = document.getElementById('awsAlias').value.trim();
+            if (!alias) {
+                alert('Please enter your AWS alias.');
+                return;
+            }
+            
+            document.getElementById('authStatus').textContent = 'Authenticating...';
+            
+            // Simulate AWS SSO authentication
+            setTimeout(() => {
+                const mockUser = {
+                    alias: alias,
+                    name: alias.charAt(0).toUpperCase() + alias.slice(1) + ' User',
+                    email: alias + '@amazon.com'
+                };
+                
+                currentUser = mockUser;
+                
+                if (selectedLoginType === 'admin') {
+                    if (applicationData.admins.includes(alias)) {
+                        isAdmin = true;
+                        document.getElementById('authContainer').style.display = 'none';
+                        document.getElementById('userInfo').classList.remove('hidden');
+                        document.getElementById('userName').textContent = mockUser.name;
+                        document.getElementById('userRole').textContent = 'Administrator';
+                        document.getElementById('adminPanel').style.display = 'block';
+                        loadAdminData();
+                    } else {
+                        document.getElementById('authStatus').textContent = 'Access denied. You are not authorized as an administrator.';
+                        document.getElementById('authStatus').style.color = '#dc3545';
+                        return;
+                    }
+                } else {
+                    isAdmin = false;
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('userInfo').classList.remove('hidden');
+                    document.getElementById('userName').textContent = mockUser.name;
+                    document.getElementById('userRole').textContent = 'User';
+                    checkUserEligibility();
+                }
+            }, 1500);
+        }
+
+        function logout() {
+            currentUser = null;
+            isAdmin = false;
+            selectedLoginType = null;
+            
+            document.getElementById('userInfo').classList.add('hidden');
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('startForm').classList.add('hidden');
+            document.getElementById('restrictionNotice').classList.add('hidden');
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('loginSelection').style.display = 'block';
+            document.getElementById('awsAlias').value = '';
+            document.getElementById('authStatus').textContent = '';
+            document.getElementById('authStatus').style.color = '#666';
+        }
+
+        // User eligibility check
+        function checkUserEligibility() {
+            const today = new Date();
+            const currentWeek = getWeekKey(today);
+            const lastTestWeek = applicationData.userLastTest[currentUser.alias];
+            
+            if (lastTestWeek === currentWeek) {
+                const nextMonday = getNextMonday(today);
+                document.getElementById('nextAvailableDate').textContent = nextMonday.toLocaleDateString();
+                document.getElementById('restrictionNotice').classList.remove('hidden');
+            } else {
+                document.getElementById('startForm').classList.remove('hidden');
+            }
+        }
+
+        function getWeekKey(date) {
+            const year = date.getFullYear();
+            const week = getWeekNumber(date);
+            return `${year}-W${week}`;
+        }
+
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        function getNextMonday(date) {
+            const nextMonday = new Date(date);
+            nextMonday.setDate(date.getDate() + (1 + 7 - date.getDay()) % 7);
+            return nextMonday;
+        }
+
+        // Admin functions
+        function showAdminTab(tabName) {
+            document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.admin-content').forEach(content => content.classList.remove('active'));
+            
+            document.getElementById(`${tabName}TabBtn`).classList.add('active');
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            
+            if (tabName === 'results') {
+                loadResults();
+            } else if (tabName === 'analytics') {
+                loadAnalytics();
+            }
+        }
+
+        function loadAdminData() {
+            loadAdminsList();
+            loadQuestionsList();
+        }
+
+        function addAdmin() {
+            const alias = document.getElementById('newAdminAlias').value.trim();
+            if (!alias) {
+                alert('Please enter a valid AWS alias.');
+                return;
+            }
+            
+            if (applicationData.admins.includes(alias)) {
+                alert('This user is already an administrator.');
+                return;
+            }
+            
+            applicationData.admins.push(alias);
+            saveApplicationData();
+            loadAdminsList();
+            document.getElementById('newAdminAlias').value = '';
+            alert('Administrator added successfully.');
+        }
+
+        function removeAdmin(alias) {
+            if (alias === 'axchibob') {
+                alert('Cannot remove the primary administrator.');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to remove ${alias} as an administrator?`)) {
+                applicationData.admins = applicationData.admins.filter(admin => admin !== alias);
+                saveApplicationData();
+                loadAdminsList();
+            }
+        }
+
+        function loadAdminsList() {
+            const adminsList = document.getElementById('adminsList');
+            adminsList.innerHTML = '';
+            
+            applicationData.admins.forEach((alias) => {
+                const adminItem = document.createElement('div');
+                adminItem.className = 'admin-item';
+                adminItem.innerHTML = `
+                    <span>${alias}</span>
+                    ${alias !== 'axchibob' ? `<button onclick="removeAdmin('${alias}')" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;">Remove</button>` : '<span style="color: #666; font-size: 12px;">Primary Admin</span>'}
+                `;
+                adminsList.appendChild(adminItem);
+            });
+        }
+
+        function addQuestion() {
+            const category = document.getElementById('newQuestionCategory').value;
+            const questionText = document.getElementById('newQuestionText').value.trim();
+            const options = [
+                document.getElementById('option0').value.trim(),
+                document.getElementById('option1').value.trim(),
+                document.getElementById('option2').value.trim(),
+                document.getElementById('option3').value.trim()
+            ];
+            const correctOption = document.querySelector('input[name="correctOption"]:checked');
+            
+            if (!category || !questionText || options.some(opt => !opt) || !correctOption) {
+                alert('Please fill in all fields and select the correct answer.');
+                return;
+            }
+            
+            const newQuestion = {
+                question: questionText,
+                options: options,
+                correct: parseInt(correctOption.value)
+            };
+            
+            if (!applicationData.questionBank[category]) {
+                applicationData.questionBank[category] = [];
+            }
+            
+            applicationData.questionBank[category].push(newQuestion);
+            saveApplicationData();
+            loadQuestionsList();
+            
+            // Clear form
+            document.getElementById('newQuestionText').value = '';
+            options.forEach((_, index) => {
+                document.getElementById(`option${index}`).value = '';
+            });
+            document.querySelector('input[name="correctOption"]:checked').checked = false;
+            
+            alert('Question added successfully.');
+        }
+
+        function loadQuestionsList() {
+            const questionsList = document.getElementById('questionsList');
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            
+            questionsList.innerHTML = '';
+            
+            Object.keys(applicationData.questionBank).forEach(category => {
+                if (categoryFilter && categoryFilter !== category) return;
+                
+                const categorySection = document.createElement('div');
+                categorySection.innerHTML = `<h5 style="margin: 20px 0 10px 0; color: #00688d;">${category} (${applicationData.questionBank[category].length} questions)</h5>`;
+                
+                applicationData.questionBank[category].forEach((question, index) => {
+                    const questionItem = document.createElement('div');
+                    questionItem.style.cssText = 'background: #f8f9fa; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 3px solid #00688d;';
+                    questionItem.innerHTML = `
+                        <div style="font-weight: bold; margin-bottom: 10px;">${question.question}</div>
+                        <div style="font-size: 14px; color: #666;">
+                            ${question.options.map((opt, i) => `${i + 1}. ${opt} ${i === question.correct ? '✓' : ''}`).join('<br>')}
+                        </div>
+                        <button onclick="removeQuestion('${category}', ${index})" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px; margin-top: 10px;">Remove</button>
+                    `;
+                    categorySection.appendChild(questionItem);
+                });
+                
+                questionsList.appendChild(categorySection);
+            });
+        }
+
+        function removeQuestion(category, index) {
+            if (confirm('Are you sure you want to remove this question?')) {
+                applicationData.questionBank[category].splice(index, 1);
+                saveApplicationData();
+                loadQuestionsList();
+            }
+        }
+
+        function filterQuestions() {
+            loadQuestionsList();
+        }
+
+        function populateCategorySelects() {
+            const categories = Object.keys(applicationData.questionBank);
+            
+            const newQuestionSelect = document.getElementById('newQuestionCategory');
+            newQuestionSelect.innerHTML = '<option value="">Select Category</option>';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                newQuestionSelect.appendChild(option);
+            });
+            
+            const filterSelect = document.getElementById('categoryFilter');
+            filterSelect.innerHTML = '<option value="">All Categories</option>';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                filterSelect.appendChild(option);
+            });
+        }
+
+        // Test functions
         function startTest() {
-            userName = document.getElementById('name').value.trim();
-            userAlias = document.getElementById('alias').value.trim();
-            if (!userName || !userAlias) {
-                alert('⚠️ Please enter both your name and AWS alias!');
-                return;
-            }
-            if (userName.length < 2 || userAlias.length < 2) {
-                alert('⚠️ Please enter valid name and alias (minimum 2 characters each)!');
-                return;
-            }
-            document.getElementById('login').classList.add('hidden');
-            document.getElementById('test').classList.remove('hidden');
-            startTime = new Date();
+            currentTest.startTime = new Date();
+            currentTest.questions = generateQuestions();
+            currentTest.currentQuestionIndex = 0;
+            currentTest.answers = {};
+            
+            document.getElementById('startForm').classList.add('hidden');
+            document.getElementById('progressContainer').classList.remove('hidden');
+            document.getElementById('questionContainer').style.display = 'block';
+            
             startTimer();
-            showQuestion();
+            displayQuestion();
+        }
+
+        function generateQuestions() {
+            const categories = Object.keys(applicationData.questionBank);
+            const selectedQuestions = [];
+            const categoryCount = {};
+            
+            categories.forEach(cat => categoryCount[cat] = 0);
+            
+            // Ensure minimum 2 questions per category
+            categories.forEach(category => {
+                const categoryQuestions = applicationData.questionBank[category];
+                if (categoryQuestions.length >= 2) {
+                    for (let i = 0; i < 2; i++) {
+                        const randomIndex = Math.floor(Math.random() * categoryQuestions.length);
+                        const question = { ...categoryQuestions[randomIndex], category };
+                        selectedQuestions.push(question);
+                        categoryCount[category]++;
+                    }
+                }
+            });
+            
+            // Fill remaining slots with max 4 per category
+            while (selectedQuestions.length < 25) {
+                const availableCategories = categories.filter(cat => 
+                    categoryCount[cat] < 4 && applicationData.questionBank[cat].length > categoryCount[cat]
+                );
+                if (availableCategories.length === 0) break;
+                
+                const randomCategory = availableCategories[Math.floor(Math.random() * availableCategories.length)];
+                const categoryQuestions = applicationData.questionBank[randomCategory];
+                const randomIndex = Math.floor(Math.random() * categoryQuestions.length);
+                const question = { ...categoryQuestions[randomIndex], category: randomCategory };
+                
+                selectedQuestions.push(question);
+                categoryCount[randomCategory]++;
+            }
+            
+            return selectedQuestions.sort(() => Math.random() - 0.5);
         }
 
         function startTimer() {
-            timerInterval = setInterval(() => {
-                const elapsed = new Date() - startTime;
+            currentTest.timerInterval = setInterval(() => {
+                const elapsed = new Date() - currentTest.startTime;
                 const minutes = Math.floor(elapsed / 60000);
                 const seconds = Math.floor((elapsed % 60000) / 1000);
                 document.getElementById('timer').textContent = 
@@ -130,229 +2342,342 @@
             }, 1000);
         }
 
-        function showQuestion() {
-            const q = questions[currentQ];
-            const progress = ((currentQ + 1) / questions.length) * 100;
+        function displayQuestion() {
+            const question = currentTest.questions[currentTest.currentQuestionIndex];
+            const questionNum = currentTest.currentQuestionIndex + 1;
             
-            document.getElementById('progress').style.width = progress + '%';
-            document.getElementById('current').textContent = currentQ + 1;
-            document.getElementById('total').textContent = questions.length;
+            document.getElementById('questionNum').textContent = questionNum;
+            document.getElementById('currentQuestion').textContent = questionNum;
+            document.getElementById('totalQuestions').textContent = currentTest.questions.length;
+            document.getElementById('categoryBadge').textContent = question.category;
+            document.getElementById('questionText').textContent = question.question;
             
-            let html = `<div class="question">
-                <div style="background: #007cba; color: white; padding: 8px 16px; border-radius: 20px; display: inline-block; font-size: 12px; margin-bottom: 15px;">
-                    📋 ${q.category}
-                </div>
-                <h3>${q.question}</h3>`;
+            const progress = (questionNum / currentTest.questions.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
             
-            q.options.forEach((option, index) => {
-                const isSelected = answers[currentQ] === index;
-                html += `<div class="option ${isSelected ? 'selected' : ''}" onclick="selectAnswer(${index})">${option}</div>`;
+            const optionsList = document.getElementById('optionsList');
+            optionsList.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const li = document.createElement('li');
+                li.className = 'option';
+                
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'answer';
+                input.value = index;
+                
+                if (currentTest.answers[currentTest.currentQuestionIndex] === index) {
+                    input.checked = true;
+                }
+                
+                input.addEventListener('change', () => {
+                    currentTest.answers[currentTest.currentQuestionIndex] = index;
+                });
+                
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(option));
+                li.appendChild(label);
+                optionsList.appendChild(li);
             });
-            html += '</div>';
             
-            document.getElementById('questionArea').innerHTML = html;
-            
-            if (currentQ === questions.length - 1) {
-                document.getElementById('nextBtn').classList.add('hidden');
-                document.getElementById('finishBtn').classList.remove('hidden');
-            }
+            document.getElementById('prevBtn').disabled = currentTest.currentQuestionIndex === 0;
+            document.getElementById('nextBtn').textContent = 
+                currentTest.currentQuestionIndex === currentTest.questions.length - 1 ? 'Finish' : 'Next';
         }
 
-        function selectAnswer(index) {
-            answers[currentQ] = index;
-            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-            event.target.classList.add('selected');
+        function previousQuestion() {
+            if (currentTest.currentQuestionIndex > 0) {
+                currentTest.currentQuestionIndex--;
+                displayQuestion();
+            }
         }
 
         function nextQuestion() {
-            if (answers[currentQ] === undefined) {
-                alert('⚠️ Please select an answer before proceeding!');
-                return;
+            if (currentTest.currentQuestionIndex < currentTest.questions.length - 1) {
+                currentTest.currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                finishTest();
             }
-            currentQ++;
-            showQuestion();
         }
 
         function finishTest() {
-            if (answers[currentQ] === undefined) {
-                alert('⚠️ Please select an answer before completing the assessment!');
-                return;
-            }
-
-            clearInterval(timerInterval);
-
-            let correct = 0;
-            let categoryStats = {};
+            currentTest.endTime = new Date();
+            clearInterval(currentTest.timerInterval);
             
-            questions.forEach((q, index) => {
-                if (!categoryStats[q.category]) {
-                    categoryStats[q.category] = { correct: 0, total: 0 };
-                }
-                categoryStats[q.category].total++;
+            saveTestResult();
+            applicationData.userLastTest[currentUser.alias] = getWeekKey(new Date());
+            saveApplicationData();
+            
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('progressContainer').classList.add('hidden');
+            document.getElementById('results').style.display = 'block';
+            
+            calculateAndDisplayResults();
+        }
+
+        function saveTestResult() {
+            const totalQuestions = currentTest.questions.length;
+            const answeredQuestions = Object.keys(currentTest.answers).length;
+            let correctAnswers = 0;
+            const categoryStats = {};
+            
+            const categories = [...new Set(currentTest.questions.map(q => q.category))];
+            categories.forEach(cat => {
+                categoryStats[cat] = { correct: 0, total: 0 };
+            });
+            
+            currentTest.questions.forEach((question, index) => {
+                categoryStats[question.category].total++;
                 
-                if (answers[index] === q.correct) {
-                    correct++;
-                    categoryStats[q.category].correct++;
+                if (currentTest.answers[index] !== undefined) {
+                    if (currentTest.answers[index] === question.correct) {
+                        correctAnswers++;
+                        categoryStats[question.category].correct++;
+                    }
                 }
             });
-
-            const score = Math.round((correct / questions.length) * 100);
-            const endTime = new Date();
-            const timeTaken = Math.round((endTime - startTime) / 1000);
-
-            const result = {
-                name: userName,
-                alias: userAlias,
-                score: score,
-                correct: correct,
-                total: questions.length,
-                timeTaken: timeTaken,
-                date: new Date().toLocaleString(),
-                categoryStats: categoryStats,
-                timestamp: Date.now()
-            };
-
-            let allResults = JSON.parse(localStorage.getItem('cgfResults') || '[]');
-            allResults.push(result);
-            localStorage.setItem('cgfResults', JSON.stringify(allResults));
-
-            document.getElementById('test').classList.add('hidden');
-            document.getElementById('results').classList.remove('hidden');
             
-            let categoryHtml = '';
-            Object.keys(categoryStats).forEach(category => {
+            const categoryPercentages = categories.map(category => {
                 const stats = categoryStats[category];
-                const percentage = Math.round((stats.correct / stats.total) * 100);
-                let color = percentage >= 80 ? '#28a745' : percentage >= 60 ? '#ffc107' : '#dc3545';
-                categoryHtml += `
-                    <div style="background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 5px solid ${color};">
-                        <strong>${category}:</strong> ${percentage}% (${stats.correct}/${stats.total} correct)
-                    </div>
-                `;
+                const percentage = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
+                return { category, percentage };
+            }).sort((a, b) => b.percentage - a.percentage);
+            
+            const result = {
+                date: new Date().toISOString(),
+                conductor: currentUser.name,
+                alias: currentUser.alias,
+                score: Math.round((correctAnswers / totalQuestions) * 100),
+                timeTaken: currentTest.endTime - currentTest.startTime,
+                questionsAnswered: answeredQuestions,
+                totalQuestions: totalQuestions,
+                bestCategory: categoryPercentages[0],
+                worstCategory: categoryPercentages[categoryPercentages.length - 1],
+                categoryStats: categoryStats
+            };
+            
+            applicationData.userResults.push(result);
+        }
+
+        function calculateAndDisplayResults() {
+            const totalQuestions = currentTest.questions.length;
+            const answeredQuestions = Object.keys(currentTest.answers).length;
+            let correctAnswers = 0;
+            const categoryStats = {};
+            
+            const categories = [...new Set(currentTest.questions.map(q => q.category))];
+            categories.forEach(cat => {
+                categoryStats[cat] = { correct: 0, total: 0 };
             });
-
-            const minutes = Math.floor(timeTaken / 60);
-            const seconds = timeTaken % 60;
-            let performanceLevel = score >= 90 ? "Excellent" : score >= 80 ? "Good" : score >= 70 ? "Satisfactory" : "Needs Improvement";
-            let performanceColor = score >= 90 ? "#28a745" : score >= 80 ? "#007cba" : score >= 70 ? "#ffc107" : "#dc3545";
-
-            document.getElementById('score').innerHTML = `
-                <div style="text-align: center; background: linear-gradient(135deg, #007cba, #0099e6); color: white; padding: 25px; border-radius: 10px; margin-bottom: 20px;">
-                    <div style="font-size: 48px; font-weight: bold;">${score}%</div>
-                    <div style="font-size: 20px; margin: 10px 0; color: ${performanceColor};">⭐ ${performanceLevel}</div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-top: 15px;">
-                        <div><strong>👤 Name:</strong><br>${userName}</div>
-                        <div><strong>🏷️ Alias:</strong><br>${userAlias}</div>
-                        <div><strong>⏱️ Time:</strong><br>${minutes}m ${seconds}s</div>
-                        <div><strong>✅ Score:</strong><br>${correct}/${questions.length}</div>
-                    </div>
-                </div>
-                <div>
-                    <h4>📊 Category Performance:</h4>
-                    ${categoryHtml}
-                </div>
-            `;
-        }
-
-        function restart() {
-            currentQ = 0;
-            answers = [];
-            document.getElementById('results').classList.add('hidden');
-            document.getElementById('login').classList.remove('hidden');
-            document.getElementById('name').value = '';
-            document.getElementById('alias').value = '';
-            document.getElementById('nextBtn').classList.remove('hidden');
-            document.getElementById('finishBtn').classList.add('hidden');
-            if (timerInterval) clearInterval(timerInterval);
-        }
-
-        function showAll() {
-            const results = JSON.parse(localStorage.getItem('cgfResults') || '[]');
-            document.getElementById('results').classList.add('hidden');
-            document.getElementById('allResults').classList.remove('hidden');
             
-            if (results.length === 0) {
-                document.getElementById('resultsList').innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><h3>📋 No Results Found</h3><p>No assessment results are currently stored.</p></div>';
-                return;
-            }
-            
-            const avgScore = Math.round(results.reduce((sum, r) => sum + r.score, 0) / results.length);
-            
-            let html = `
-                <div style="margin-bottom: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px;">
-                    <strong>📈 Summary:</strong> ${results.length} total assessments | Average Score: ${avgScore}%
-                </div>
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                        <thead>
-                            <tr style="background: #007cba; color: white;">
-                                <th style="padding: 10px; border: 1px solid #ddd;">📅 Date</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">👤 Name</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">🏷️ Alias</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">📊 Score</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">⏱️ Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            results.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((result, index) => {
-                const minutes = Math.floor(result.timeTaken / 60);
-                const seconds = result.timeTaken % 60;
-                let rowColor = index % 2 === 0 ? '#f8f9fa' : 'white';
-                let scoreColor = result.score >= 80 ? '#28a745' : result.score >= 70 ? '#ffc107' : '#dc3545';
+            currentTest.questions.forEach((question, index) => {
+                categoryStats[question.category].total++;
                 
-                html += `
-                    <tr style="background: ${rowColor};">
-                        <td style="padding: 8px; border: 1px solid #ddd;">${result.date}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>${result.name}</strong></td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${result.alias}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd; text-align: center;"><strong style="color: ${scoreColor};">${result.score}%</strong></td>
-                        <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${minutes}m ${seconds}s</td>
-                    </tr>
-                `;
+                if (currentTest.answers[index] !== undefined) {
+                    if (currentTest.answers[index] === question.correct) {
+                        correctAnswers++;
+                        categoryStats[question.category].correct++;
+                    }
+                }
             });
             
-            html += '</tbody></table></div>';
-            document.getElementById('resultsList').innerHTML = html;
+            const overallScore = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            const timeTaken = currentTest.endTime - currentTest.startTime;
+            const minutes = Math.floor(timeTaken / 60000);
+            const seconds = Math.floor((timeTaken % 60000) / 1000);
+            const timeString = `${minutes}m ${seconds}s`;
+            
+            document.getElementById('finalScore').textContent = `${overallScore}%`;
+            document.getElementById('resultConductor').textContent = currentUser.name;
+            document.getElementById('resultTime').textContent = timeString;
+            document.getElementById('resultAnswered').textContent = answeredQuestions;
+            
+            const categoryResults = document.getElementById('categoryResults');
+            categoryResults.innerHTML = '';
+            
+            const categoryPercentages = categories.map(category => {
+                const stats = categoryStats[category];
+                const percentage = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
+                return { category, percentage, correct: stats.correct, total: stats.total };
+            }).sort((a, b) => b.percentage - a.percentage);
+            
+            const bestCategory = categoryPercentages[0];
+            const worstCategory = categoryPercentages[categoryPercentages.length - 1];
+            
+            categoryPercentages.forEach((cat, index) => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                
+                if (cat.category === bestCategory.category && cat.percentage > worstCategory.percentage) {
+                    card.classList.add('best-category');
+                }
+                if (cat.category === worstCategory.category && cat.percentage < bestCategory.percentage) {
+                    card.classList.add('worst-category');
+                }
+                
+                card.innerHTML = `
+                    <div class="category-name">${cat.category}</div>
+                    <div class="category-score">${cat.percentage}%</div>
+                    <div>${cat.correct}/${cat.total} correct</div>
+                    
+                    <div style="font-size: 12px; color: #666;">Rank: ${index + 1} of ${categories.length}</div>
+                `;
+                
+                categoryResults.appendChild(card);
+            });
         }
 
-        function hideAll() {
-            document.getElementById('allResults').classList.add('hidden');
-            document.getElementById('results').classList.remove('hidden');
+        // Results and Analytics functions
+        function loadResults() {
+            const tableBody = document.getElementById('resultsTableBody');
+            tableBody.innerHTML = '';
+            
+            applicationData.userResults
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .forEach(result => {
+                    const row = document.createElement('tr');
+                    const timeTaken = Math.floor(result.timeTaken / 60000) + 'm ' + Math.floor((result.timeTaken % 60000) / 1000) + 's';
+                    
+                    row.innerHTML = `
+                        <td>${new Date(result.date).toLocaleDateString()}</td>
+                        <td>${result.conductor}</td>
+                        <td>${result.score}%</td>
+                        <td>${timeTaken}</td>
+                        <td>${result.questionsAnswered}/${result.totalQuestions}</td>
+                        <td>${result.bestCategory.category} (${result.bestCategory.percentage}%)</td>
+                        <td>${result.worstCategory.category} (${result.worstCategory.percentage}%)</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
         }
 
-        function exportCSV() {
-            const results = JSON.parse(localStorage.getItem('cgfResults') || '[]');
-            if (results.length === 0) {
-                alert('📋 No results available to export!');
+        function filterResults() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!startDate || !endDate) {
+                loadResults();
                 return;
             }
             
-            let csv = 'Date,Name,Alias,Score(%),Correct,Total,Duration(seconds),Performance\n';
+            const tableBody = document.getElementById('resultsTableBody');
+            tableBody.innerHTML = '';
+            
+            applicationData.userResults
+                .filter(result => {
+                    const resultDate = new Date(result.date).toISOString().split('T')[0];
+                    return resultDate >= startDate && resultDate <= endDate;
+                })
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .forEach(result => {
+                    const row = document.createElement('tr');
+                    const timeTaken = Math.floor(result.timeTaken / 60000) + 'm ' + Math.floor((result.timeTaken % 60000) / 1000) + 's';
+                    
+                    row.innerHTML = `
+                        <td>${new Date(result.date).toLocaleDateString()}</td>
+                        <td>${result.conductor}</td>
+                        <td>${result.score}%</td>
+                        <td>${timeTaken}</td>
+                        <td>${result.questionsAnswered}/${result.totalQuestions}</td>
+                        <td>${result.bestCategory.category} (${result.bestCategory.percentage}%)</td>
+                        <td>${result.worstCategory.category} (${result.worstCategory.percentage}%)</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+        }
+
+        function exportResults() {
+            const results = applicationData.userResults;
+            if (results.length === 0) {
+                alert('No results to export.');
+                return;
+            }
+            
+            let csv = 'Date,Conductor,Alias,Score,Time Taken (ms),Questions Answered,Total Questions,Best Category,Best Category %,Worst Category,Worst Category %\n';
+            
             results.forEach(result => {
-                const performance = result.score >= 90 ? 'Excellent' : result.score >= 80 ? 'Good' : result.score >= 70 ? 'Satisfactory' : 'Needs Improvement';
-                csv += `"${result.date}","${result.name}","${result.alias}",${result.score},${result.correct},${result.total},${result.timeTaken},"${performance}"\n`;
+                csv += `${result.date},${result.conductor},${result.alias},${result.score},${result.timeTaken},${result.questionsAnswered},${result.totalQuestions},${result.bestCategory.category},${result.bestCategory.percentage},${result.worstCategory.category},${result.worstCategory.percentage}\n`;
             });
             
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `CGF-Security-Assessment-Results-${new Date().toISOString().split('T')[0]}.csv`;
-            document.body.appendChild(a);
+            a.download = `cgf-assessment-results-${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
-            document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
-            
-            alert('📥 Results exported successfully!');
         }
 
-        function clearAll() {
-            if (confirm('⚠️ Are you sure you want to delete ALL assessment results? This cannot be undone!')) {
-                localStorage.removeItem('cgfResults');
-                alert('🗑️ All results have been cleared.');
-                showAll();
+        function loadAnalytics() {
+            const analyticsStats = document.getElementById('analyticsStats');
+            analyticsStats.innerHTML = '';
+            
+            if (applicationData.userResults.length === 0) {
+                analyticsStats.innerHTML = '<p>No assessment data available yet.</p>';
+                return;
+            }
+            
+            const totalAssessments = applicationData.userResults.length;
+            const averageScore = Math.round(applicationData.userResults.reduce((sum, result) => sum + result.score, 0) / totalAssessments);
+            const averageTime = Math.round(applicationData.userResults.reduce((sum, result) => sum + result.timeTaken, 0) / totalAssessments);
+            
+            const categoryPerformance = {};
+            applicationData.userResults.forEach(result => {
+                Object.keys(result.categoryStats).forEach(category => {
+                    if (!categoryPerformance[category]) {
+                        categoryPerformance[category] = { correct: 0, total: 0 };
+                    }
+                    categoryPerformance[category].correct += result.categoryStats[category].correct;
+                    categoryPerformance[category].total += result.categoryStats[category].total;
+                });
+            });
+            
+            const overallCard = document.createElement('div');
+            overallCard.className = 'category-card';
+            overallCard.innerHTML = `
+                <div class="category-name">Overall Statistics</div>
+                <div>Total Assessments: ${totalAssessments}</div>
+                <div>Average Score: ${averageScore}%</div>
+                <div>Average Time: ${Math.floor(averageTime / 60000)}m ${Math.floor((averageTime % 60000) / 1000)}s</div>
+            `;
+            analyticsStats.appendChild(overallCard);
+            
+            Object.keys(categoryPerformance).forEach(category => {
+                const stats = categoryPerformance[category];
+                const percentage = Math.round((stats.correct / stats.total) * 100);
+                
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.innerHTML = `
+                    <div class="category-name">${category}</div>
+                    <div class="category-score">${percentage}%</div>
+                    <div>${stats.correct}/${stats.total} correct across all assessments</div>
+                `;
+                analyticsStats.appendChild(card);
+            });
+        }
+
+        // Data persistence functions
+        function saveApplicationData() {
+            localStorage.setItem('cgfAssessmentData', JSON.stringify(applicationData));
+        }
+
+        function loadApplicationData() {
+            const saved = localStorage.getItem('cgfAssessmentData');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                applicationData = {
+                    ...applicationData,
+                    ...savedData,
+                    questionBank: {
+                        ...applicationData.questionBank,
+                        ...savedData.questionBank
+                    }
+                };
             }
         }
     </script>
