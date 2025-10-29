@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CGF Security Assessment</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .btn { background: #007cba; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; margin: 5px; font-size: 16px; }
+        .btn:hover { background: #005a8a; }
+        .question { margin: 20px 0; padding: 20px; background: #f9f9f9; border-radius: 8px; }
+        .option { margin: 10px 0; padding: 15px; background: white; border: 2px solid #ddd; border-radius: 6px; cursor: pointer; }
+        .option:hover { background: #e3f2fd; border-color: #007cba; }
+        .option.selected { background: #e3f2fd; border-color: #007cba; }
+        .hidden { display: none; }
+        .header { background: linear-gradient(135deg, #007cba, #0099e6); color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 CGF Security Assessment</h1>
+            <p>Professional Security Training Platform</p>
+        </div>
+        
+        <div id="login">
+            <h3>👤 Enter Your Details</h3>
+            <input type="text" id="name" placeholder="Your Full Name" style="width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 6px; font-size: 16px;">
+            <input type="text" id="alias" placeholder="Your AWS Alias" style="width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 6px; font-size: 16px;">
+            <button class="btn" onclick="startTest()">🚀 Start Security Assessment</button>
+        </div>
+
+        <div id="test" class="hidden">
+            <div style="background: #e9ecef; height: 10px; border-radius: 5px; margin: 20px 0;">
+                <div id="progress" style="background: #007cba; height: 100%; border-radius: 5px; width: 0%; transition: width 0.3s;"></div>
+            </div>
+            <p style="text-align: center;">Question <span id="current">1</span> of <span id="total">5</span> | Time: <span id="timer">00:00</span></p>
+            <div id="questionArea"></div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn" onclick="nextQuestion()" id="nextBtn">Next Question ➡️</button>
+                <button class="btn" onclick="finishTest()" id="finishBtn" class="hidden" style="background: #28a745;">✅ Complete Assessment</button>
+            </div>
+        </div>
+
+        <div id="results" class="hidden">
+            <h2>🎉 Assessment Complete!</h2>
+            <div id="score"></div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn" onclick="restart()">🔄 Take Again</button>
+                <button class="btn" onclick="showAll()" style="background: #6c757d;">📊 Admin: View All Results</button>
+            </div>
+        </div>
+
+        <div id="allResults" class="hidden">
+            <h3>📋 All Assessment Results (Admin View)</h3>
+            <div id="resultsList"></div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn" onclick="hideAll()">← Back to Results</button>
+                <button class="btn" onclick="exportCSV()" style="background: #28a745;">📥 Export to CSV</button>
+                <button class="btn" onclick="clearAll()" style="background: #dc3545;">🗑️ Clear All Data</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the main purpose of a firewall in network security?",
+                options: ["Speed up internet connection", "Monitor and control incoming/outgoing network traffic", "Store user passwords securely", "Automatically update software"],
+                correct: 1,
+                category: "Network Security"
+            },
+            {
+                question: "What should you do when you receive a suspicious email?",
+                options: ["Open it immediately to investigate", "Report it to security team and delete safely", "Forward it to colleagues for their opinion", "Save it in a special folder for later"],
+                correct: 1,
+                category: "Security Awareness"
+            },
+            {
+                question: "What is phishing in cybersecurity context?",
+                options: ["A recreational fishing activity", "Fraudulent attempt to obtain sensitive information by impersonation", "A type of antivirus software", "A method of data encryption"],
+                correct: 1,
+                category: "Security Awareness"
+            },
+            {
+                question: "What does the principle of 'least privilege' mean in access control?",
+                options: ["Give users maximum access for operational efficiency", "Provide users with minimum access rights needed for their job function", "Allow unrestricted access to all systems", "Assign access rights randomly to users"],
+                correct: 1,
+                category: "Access Control"
+            },
+            {
+                question: "What is the first step in incident response procedures?",
+                options: ["Immediately start fixing the problem", "Identify, assess, and contain the security incident", "Notify all employees about the incident", "Shut down all systems immediately"],
+                correct: 1,
+                category: "Incident Response"
+            }
+        ];
+
+        let currentQ = 0;
+        let answers = [];
+        let userName = "";
+        let userAlias = "";
+        let startTime = new Date();
+        let timerInterval;
+
+        function startTest() {
+            userName = document.getElementById('name').value.trim();
+            userAlias = document.getElementById('alias').value.trim();
+            if (!userName || !userAlias) {
+                alert('⚠️ Please enter both your name and AWS alias!');
+                return;
+            }
+            if (userName.length < 2 || userAlias.length < 2) {
+                alert('⚠️ Please enter valid name and alias (minimum 2 characters each)!');
+                return;
+            }
+            document.getElementById('login').classList.add('hidden');
+            document.getElementById('test').classList.remove('hidden');
+            startTime = new Date();
+            startTimer();
+            showQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = new Date() - startTime;
+                const minutes = Math.floor(elapsed / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function showQuestion() {
+            const q = questions[currentQ];
+            const progress = ((currentQ + 1) / questions.length) * 100;
+            
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('current').textContent = currentQ + 1;
+            document.getElementById('total').textContent = questions.length;
+            
+            let html = `<div class="question">
+                <div style="background: #007cba; color: white; padding: 8px 16px; border-radius: 20px; display: inline-block; font-size: 12px; margin-bottom: 15px;">
+                    📋 ${q.category}
+                </div>
+                <h3>${q.question}</h3>`;
+            
+            q.options.forEach((option, index) => {
+                const isSelected = answers[currentQ] === index;
+                html += `<div class="option ${isSelected ? 'selected' : ''}" onclick="selectAnswer(${index})">${option}</div>`;
+            });
+            html += '</div>';
+            
+            document.getElementById('questionArea').innerHTML = html;
+            
+            if (currentQ === questions.length - 1) {
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('finishBtn').classList.remove('hidden');
+            }
+        }
+
+        function selectAnswer(index) {
+            answers[currentQ] = index;
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        function nextQuestion() {
+            if (answers[currentQ] === undefined) {
+                alert('⚠️ Please select an answer before proceeding!');
+                return;
+            }
+            currentQ++;
+            showQuestion();
+        }
+
+        function finishTest() {
+            if (answers[currentQ] === undefined) {
+                alert('⚠️ Please select an answer before completing the assessment!');
+                return;
+            }
+
+            clearInterval(timerInterval);
+
+            let correct = 0;
+            let categoryStats = {};
+            
+            questions.forEach((q, index) => {
+                if (!categoryStats[q.category]) {
+                    categoryStats[q.category] = { correct: 0, total: 0 };
+                }
+                categoryStats[q.category].total++;
+                
+                if (answers[index] === q.correct) {
+                    correct++;
+                    categoryStats[q.category].correct++;
+                }
+            });
+
+            const score = Math.round((correct / questions.length) * 100);
+            const endTime = new Date();
+            const timeTaken = Math.round((endTime - startTime) / 1000);
+
+            const result = {
+                name: userName,
+                alias: userAlias,
+                score: score,
+                correct: correct,
+                total: questions.length,
+                timeTaken: timeTaken,
+                date: new Date().toLocaleString(),
+                categoryStats: categoryStats,
+                timestamp: Date.now()
+            };
+
+            let allResults = JSON.parse(localStorage.getItem('cgfResults') || '[]');
+            allResults.push(result);
+            localStorage.setItem('cgfResults', JSON.stringify(allResults));
+
+            document.getElementById('test').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+            
+            let categoryHtml = '';
+            Object.keys(categoryStats).forEach(category => {
+                const stats = categoryStats[category];
+                const percentage = Math.round((stats.correct / stats.total) * 100);
+                let color = percentage >= 80 ? '#28a745' : percentage >= 60 ? '#ffc107' : '#dc3545';
+                categoryHtml += `
+                    <div style="background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 5px solid ${color};">
+                        <strong>${category}:</strong> ${percentage}% (${stats.correct}/${stats.total} correct)
+                    </div>
+                `;
+            });
+
+            const minutes = Math.floor(timeTaken / 60);
+            const seconds = timeTaken % 60;
+            let performanceLevel = score >= 90 ? "Excellent" : score >= 80 ? "Good" : score >= 70 ? "Satisfactory" : "Needs Improvement";
+            let performanceColor = score >= 90 ? "#28a745" : score >= 80 ? "#007cba" : score >= 70 ? "#ffc107" : "#dc3545";
+
+            document.getElementById('score').innerHTML = `
+                <div style="text-align: center; background: linear-gradient(135deg, #007cba, #0099e6); color: white; padding: 25px; border-radius: 10px; margin-bottom: 20px;">
+                    <div style="font-size: 48px; font-weight: bold;">${score}%</div>
+                    <div style="font-size: 20px; margin: 10px 0; color: ${performanceColor};">⭐ ${performanceLevel}</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <div><strong>👤 Name:</strong><br>${userName}</div>
+                        <div><strong>🏷️ Alias:</strong><br>${userAlias}</div>
+                        <div><strong>⏱️ Time:</strong><br>${minutes}m ${seconds}s</div>
+                        <div><strong>✅ Score:</strong><br>${correct}/${questions.length}</div>
+                    </div>
+                </div>
+                <div>
+                    <h4>📊 Category Performance:</h4>
+                    ${categoryHtml}
+                </div>
+            `;
+        }
+
+        function restart() {
+            currentQ = 0;
+            answers = [];
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('login').classList.remove('hidden');
+            document.getElementById('name').value = '';
+            document.getElementById('alias').value = '';
+            document.getElementById('nextBtn').classList.remove('hidden');
+            document.getElementById('finishBtn').classList.add('hidden');
+            if (timerInterval) clearInterval(timerInterval);
+        }
+
+        function showAll() {
+            const results = JSON.parse(localStorage.getItem('cgfResults') || '[]');
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('allResults').classList.remove('hidden');
+            
+            if (results.length === 0) {
+                document.getElementById('resultsList').innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><h3>📋 No Results Found</h3><p>No assessment results are currently stored.</p></div>';
+                return;
+            }
+            
+            const avgScore = Math.round(results.reduce((sum, r) => sum + r.score, 0) / results.length);
+            
+            let html = `
+                <div style="margin-bottom: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px;">
+                    <strong>📈 Summary:</strong> ${results.length} total assessments | Average Score: ${avgScore}%
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr style="background: #007cba; color: white;">
+                                <th style="padding: 10px; border: 1px solid #ddd;">📅 Date</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">👤 Name</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">🏷️ Alias</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">📊 Score</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">⏱️ Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            results.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((result, index) => {
+                const minutes = Math.floor(result.timeTaken / 60);
+                const seconds = result.timeTaken % 60;
+                let rowColor = index % 2 === 0 ? '#f8f9fa' : 'white';
+                let scoreColor = result.score >= 80 ? '#28a745' : result.score >= 70 ? '#ffc107' : '#dc3545';
+                
+                html += `
+                    <tr style="background: ${rowColor};">
+                        <td style="padding: 8px; border: 1px solid #ddd;">${result.date}</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>${result.name}</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${result.alias}</td>
+                        <td style="padding: 8px; border: 1px solid #ddd; text-align: center;"><strong style="color: ${scoreColor};">${result.score}%</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${minutes}m ${seconds}s</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table></div>';
+            document.getElementById('resultsList').innerHTML = html;
+        }
+
+        function hideAll() {
+            document.getElementById('allResults').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+        }
+
+        function exportCSV() {
+            const results = JSON.parse(localStorage.getItem('cgfResults') || '[]');
+            if (results.length === 0) {
+                alert('📋 No results available to export!');
+                return;
+            }
+            
+            let csv = 'Date,Name,Alias,Score(%),Correct,Total,Duration(seconds),Performance\n';
+            results.forEach(result => {
+                const performance = result.score >= 90 ? 'Excellent' : result.score >= 80 ? 'Good' : result.score >= 70 ? 'Satisfactory' : 'Needs Improvement';
+                csv += `"${result.date}","${result.name}","${result.alias}",${result.score},${result.correct},${result.total},${result.timeTaken},"${performance}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `CGF-Security-Assessment-Results-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('📥 Results exported successfully!');
+        }
+
+        function clearAll() {
+            if (confirm('⚠️ Are you sure you want to delete ALL assessment results? This cannot be undone!')) {
+                localStorage.removeItem('cgfResults');
+                alert('🗑️ All results have been cleared.');
+                showAll();
+            }
+        }
+    </script>
+</body>
+</html>
